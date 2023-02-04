@@ -104,7 +104,7 @@ impl DecryptedCipher {
                     }
                 }
                 "username" | "user" => {
-                    display_field("Username", username.as_deref());
+                    display_field_value(username.as_deref());
                 }
                 "totp" | "code" => {
                     if let Some(totp) = totp {
@@ -116,7 +116,7 @@ impl DecryptedCipher {
                 "uris" | "urls" | "sites" => {
                     if let Some(uris) = uris {
                         for uri in uris {
-                            display_field("URI", Some(uri.uri.as_str()));
+                            display_field_value(Some(uri.uri.as_str()));
                         }
                     }
                 }
@@ -132,10 +132,7 @@ impl DecryptedCipher {
                             .as_str()
                             .contains(field)
                         {
-                            display_field(
-                                f.name.as_deref().unwrap_or("(null)"),
-                                Some(f.value.as_deref().unwrap_or("")),
-                            );
+                            display_field_value(Some(f.value.as_deref().unwrap_or("")));
                         }
                     }
                 }
@@ -160,19 +157,19 @@ impl DecryptedCipher {
                     }
                 }
                 "exp_month" | "month" => {
-                    display_field("Month", exp_month.as_deref());
+                    display_field_value(exp_month.as_deref());
                 }
                 "exp_year" | "year" => {
-                    display_field("Year", exp_year.as_deref());
+                    display_field_value(exp_year.as_deref());
                 }
                 "cvv" => {
-                    display_field("CVV", code.as_deref());
+                    display_field_value(code.as_deref());
                 }
                 "name" | "cardholder" => {
-                    display_field("Name", cardholder_name.as_deref());
+                    display_field_value(cardholder_name.as_deref());
                 }
                 "brand" | "type" => {
-                    display_field("Brand", brand.as_deref());
+                    display_field_value(brand.as_deref());
                 }
                 "notes" => {
                     if let Some(notes) = &self.notes {
@@ -188,10 +185,7 @@ impl DecryptedCipher {
                             .as_str()
                             .contains(field)
                         {
-                            display_field(
-                                f.name.as_deref().unwrap_or("(null)"),
-                                Some(f.value.as_deref().unwrap_or("")),
-                            );
+                            display_field_value(Some(f.value.as_deref().unwrap_or("")));
                         }
                     }
                 }
@@ -216,39 +210,39 @@ impl DecryptedCipher {
                     self.display_short(desc);
                 }
                 "email" => {
-                    display_field("Email", email.as_deref());
+                    display_field_value(email.as_deref());
                 }
                 "address" => {
-                    display_field("Address", address1.as_deref());
-                    display_field("Address", address2.as_deref());
-                    display_field("Address", address3.as_deref());
+                    display_field_value(address1.as_deref());
+                    display_field_value(address2.as_deref());
+                    display_field_value(address3.as_deref());
                 }
                 "city" => {
-                    display_field("City", city.as_deref());
+                    display_field_value(city.as_deref());
                 }
                 "state" => {
-                    display_field("State", state.as_deref());
+                    display_field_value(state.as_deref());
                 }
                 "postcode" | "zipcode" | "zip" => {
-                    display_field("Zip", postal_code.as_deref());
+                    display_field_value(postal_code.as_deref());
                 }
                 "country" => {
-                    display_field("Country", country.as_deref());
+                    display_field_value(country.as_deref());
                 }
                 "phone" => {
-                    display_field("Phone", phone.as_deref());
+                    display_field_value(phone.as_deref());
                 }
                 "ssn" => {
-                    display_field("SSN", ssn.as_deref());
+                    display_field_value(ssn.as_deref());
                 }
                 "license" => {
-                    display_field("License", license_number.as_deref());
+                    display_field_value(license_number.as_deref());
                 }
                 "passport" => {
-                    display_field("Passport", passport_number.as_deref());
+                    display_field_value(passport_number.as_deref());
                 }
                 "username" => {
-                    display_field("Username", username.as_deref());
+                    display_field_value(username.as_deref());
                 }
                 "notes" => {
                     if let Some(notes) = &self.notes {
@@ -264,10 +258,7 @@ impl DecryptedCipher {
                             .as_str()
                             .contains(field)
                         {
-                            display_field(
-                                f.name.as_deref().unwrap_or("(null)"),
-                                Some(f.value.as_deref().unwrap_or("")),
-                            );
+                            display_field_value(Some(f.value.as_deref().unwrap_or("")));
                         }
                     }
                 }
@@ -285,10 +276,7 @@ impl DecryptedCipher {
                             .as_str()
                             .contains(field)
                         {
-                            display_field(
-                                f.name.as_deref().unwrap_or("(null)"),
-                                Some(f.value.as_deref().unwrap_or("")),
-                            );
+                            display_field_value(Some(f.value.as_deref().unwrap_or("")));
                         }
                     }
                 }
@@ -1911,6 +1899,16 @@ fn display_field(name: &str, field: Option<&str>) -> bool {
         || false,
         |field| {
             println!("{name}: {field}");
+            true
+        },
+    )
+}
+
+fn display_field_value(field: Option<&str>) -> bool {
+    field.map_or_else(
+        || false,
+        |field| {
+            println!("{}", field);
             true
         },
     )
