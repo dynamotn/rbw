@@ -15,6 +15,7 @@ pub struct Config {
     #[serde(default = "default_pinentry")]
     pub pinentry: String,
     pub client_cert_path: Option<std::path::PathBuf>,
+    pub master_password_command: Option<String>,
     // backcompat, no longer generated in new configs
     #[serde(skip_serializing)]
     pub device_id: Option<String>,
@@ -30,6 +31,7 @@ impl Default for Config {
             sync_interval: default_sync_interval(),
             pinentry: default_pinentry(),
             client_cert_path: None,
+            master_password_command: None,
             device_id: None,
         }
     }
