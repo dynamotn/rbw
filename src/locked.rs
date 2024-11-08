@@ -62,6 +62,30 @@ impl Vec {
     pub fn truncate(&mut self, len: usize) {
         self.data.truncate(len);
     }
+
+    pub async fn read_to_end<
+        R: tokio::io::AsyncRead + tokio::io::AsyncReadExt + Unpin + Send,
+    >(
+        &mut self,
+        mut r: R,
+    ) -> anyhow::Result<usize> {
+        self.zero();
+
+        let data = self.data_mut();
+
+        let mut len = 0;
+        while len < data.len() {
+            let bytes = r.read(&mut data[len..]).await?;
+            if bytes == 0 {
+                break;
+            }
+            len += bytes;
+        }
+
+        self.truncate(len);
+
+        Ok(len)
+    }
 }
 
 impl Drop for Vec {

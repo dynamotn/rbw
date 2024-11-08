@@ -920,6 +920,9 @@ pub fn config_set(key: &str, value: &str) -> anyhow::Result<()> {
             config.sync_interval = interval;
         }
         "pinentry" => config.pinentry = value.to_string(),
+        "master_password_command" => {
+            config.master_password_command = Some(value.to_string());
+        }
         _ => return Err(anyhow::anyhow!("invalid config key: {}", key)),
     }
     config.save()?;
@@ -949,6 +952,7 @@ pub fn config_unset(key: &str) -> anyhow::Result<()> {
             config.lock_timeout = rbw::config::default_lock_timeout();
         }
         "pinentry" => config.pinentry = rbw::config::default_pinentry(),
+        "master_password_command" => config.master_password_command = None,
         _ => return Err(anyhow::anyhow!("invalid config key: {}", key)),
     }
     config.save()?;
@@ -1643,9 +1647,8 @@ fn check_config() -> anyhow::Result<()> {
 }
 
 fn version_or_quit() -> anyhow::Result<u32> {
-    crate::actions::version().map_err(|e| {
+    crate::actions::version().inspect_err(|_e| {
         let _ = crate::actions::quit();
-        e
     })
 }
 
